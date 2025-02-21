@@ -1,0 +1,11 @@
+services:
+  traefik:
+    container_name: traefik-dev
+    ports:
+      - "8080:8080"   # Añadimos el dashboard en dev
+    # Montar acme.json solo si quieres probar Let's Encrypt en local
+    # Sino, no pasa nada
+    volumes:
+      - ./acme.json:/acme.json
+      - ./traefik.dev.yml:/etc/traefik/traefik.yml:ro
+      - ./dynamic_conf.dev.yml:/etc/traefik/dynamic_conf.dev.yml:ro

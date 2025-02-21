@@ -1,0 +1,10 @@
+services:
+  traefik:
+    container_name: traefik-prod
+    ports:
+      - "80:80"
+      - "443:443"  # En prod sí exponemos HTTPS
+    volumes:
+      - /etc/nginx/ssl:/etc/traefik/ssl:ro  # Certificados reales
+      - ./traefik.prod.yml:/etc/traefik/traefik.yml:ro
+      - ./dynamic_conf.prod.yml:/etc/traefik/dynamic_conf.prod.yml:ro

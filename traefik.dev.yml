@@ -1,0 +1,20 @@
+entryPoints:
+  http:
+    address: ":80"
+  traefik:
+    address: ":8080"
+
+api:
+  dashboard: true
+  insecure: true  # Permite acceder sin autenticación en dev (cambiar en producción)
+
+log:
+  level: DEBUG  # Cambia a DEBUG para más información en logs
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+  file:
+    filename: "/etc/traefik/dynamic_conf.dev.yml"
+    watch: true

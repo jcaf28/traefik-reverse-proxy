@@ -1,0 +1,15 @@
+services:
+  traefik:
+    image: traefik:v2.9
+    container_name: traefik
+    networks:
+      - proxy_net
+    ports:
+      - "80:80"   # En base, asumimos siempre exponer 80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+networks:
+  proxy_net:
+    name: proxy_net
+    driver: bridge

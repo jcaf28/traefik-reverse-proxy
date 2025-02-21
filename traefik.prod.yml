@@ -1,0 +1,21 @@
+# traefik.prod.yml
+api:
+  dashboard: true   # Podrías desactivarlo en prod si no quieres exponerlo
+  insecure: true    # Ojo: 'insecure: true' expone el panel sin auth. Mejor protegerlo con auth si lo expones.
+
+log:
+  level: INFO
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+  file:
+    filename: "/etc/traefik/dynamic_conf.prod.yml"
+    watch: true
+
+entryPoints:
+  http:
+    address: ":80"
+  https:
+    address: ":443"

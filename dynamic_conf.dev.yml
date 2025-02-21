@@ -1,0 +1,15 @@
+# dynamic_conf.dev.yml
+http:
+  # Sólo ejemplo de un router que atiende cualquier petición HTTP
+  routers:
+    dev-router:
+      rule: "HostRegexp(`{any:.*}`)"
+      entryPoints:
+        - "http"
+      service: "noop-service"
+
+  services:
+    noop-service:
+      loadBalancer:
+        servers:
+          - url: "http://127.0.0.1"
