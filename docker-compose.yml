@@ -1,3 +1,4 @@
+#PATH: ./docker-compose.yml
 services:
   traefik:
     image: traefik:v2.9

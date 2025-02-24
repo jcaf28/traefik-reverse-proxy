@@ -1,3 +1,4 @@
+# PATH: ./docker-compose.override.yml
 services:
   traefik:
     container_name: traefik-dev
@@ -9,3 +10,16 @@ services:
       - ./acme.json:/acme.json
       - ./traefik.dev.yml:/etc/traefik/traefik.yml:ro
       - ./dynamic_conf.dev.yml:/etc/traefik/dynamic_conf.dev.yml:ro
+  
+  traefik-dev-message:
+    image: hashicorp/http-echo:latest
+    command: ["-listen=:5678", "-text=🚀 Traefik está funcionando en modo desarrollo!"]
+    networks:
+      - proxy_net
+    ports:
+      - "5678:5678"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dev-message.rule=PathPrefix(`/health-test`)"
+      - "traefik.http.routers.dev-message.entrypoints=http"
+      - "traefik.http.services.dev-message.loadbalancer.server.port=5678"
