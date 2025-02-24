@@ -1,12 +1,13 @@
-#PATH: ./docker-compose.yml
 services:
   traefik:
-    image: traefik:v2.9
+    image: traefik:v3.3
     container_name: traefik
     networks:
       - proxy_net
+    # Exponemos 80 y 443 para HTTP y HTTPS
     ports:
-      - "80:80"   # En base, asumimos siempre exponer 80
+      - "80:80"
+      - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 

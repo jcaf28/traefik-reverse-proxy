@@ -2,24 +2,22 @@
 services:
   traefik:
     container_name: traefik-dev
+    # Añadimos el dashboard en el 8080 (ya estaba)
     ports:
-      - "8080:8080"   # Añadimos el dashboard en dev
-    # Montar acme.json solo si quieres probar Let's Encrypt en local
-    # Sino, no pasa nada
+      - "8080:8080"
     volumes:
       - ./acme.json:/acme.json
       - ./traefik.dev.yml:/etc/traefik/traefik.yml:ro
       - ./dynamic_conf.dev.yml:/etc/traefik/dynamic_conf.dev.yml:ro
-  
-  traefik-dev-message:
-    image: hashicorp/http-echo:latest
-    command: ["-listen=:5678", "-text=🚀 Traefik está funcionando en modo desarrollo!"]
-    networks:
-      - proxy_net
-    ports:
-      - "5678:5678"
+
+  whoami:
+    # A container that exposes an API to show its IP address
+    image: traefik/whoami
+    container_name: whoami-container
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dev-message.rule=PathPrefix(`/health-test`)"
-      - "traefik.http.routers.dev-message.entrypoints=http"
-      - "traefik.http.services.dev-message.loadbalancer.server.port=5678"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"
+      - "traefik.http.routers.whoami.rule=PathPrefix(`/whoami-test`)"
+    networks:
+      - proxy_net
+

@@ -1,20 +1,27 @@
 entryPoints:
   http:
     address: ":80"
+  https:
+    address: ":443"
   traefik:
     address: ":8080"
 
 api:
   dashboard: true
-  insecure: true  # Permite acceder sin autenticación en dev (cambiar en producción)
+  insecure: true
 
 log:
-  level: DEBUG  # Cambia a DEBUG para más información en logs
+  level: DEBUG
 
+# El bloque "providers" en la configuración de Traefik define de dónde obtiene la información sobre los servicios a los que debe dirigir el tráfico.
 providers:
+  #El bloque "docker" dice a Traefik que debe mirar dentro de Docker para encontrar servicios que tengan labels de Traefik.
   docker:
-    endpoint: "unix:///var/run/docker.sock"
-    exposedByDefault: false
+    endpoint: "unix:///var/run/docker.sock" # socket UNIX que permite que los programas dentro del host se comuniquen con el demonio de Docker (dockerd).
+    exposedByDefault: false # Solo los contenedores que tengan la label traefik.enable=true serán considerados.
+  
+  #El bloque "file" le dice a Traefik que también debe leer un archivo YAML donde se pueden definir routers, services y middlewares.
   file:
     filename: "/etc/traefik/dynamic_conf.dev.yml"
     watch: true
+

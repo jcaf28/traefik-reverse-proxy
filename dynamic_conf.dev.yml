@@ -1,13 +1,21 @@
 http:
   routers:
-    dev-message:
-      rule: "PathPrefix(`/health-test`)"
+    # (1) Router para redirigir TODO http -> https
+    redirect-to-https:
+      rule: "HostRegexp(`{any:.*}`)"
       entryPoints:
         - "http"
-      service: "dev-message"
+      middlewares:
+        - "redirect-https"
+      # "noop@internal" es un servicio nativo de Traefik que no hace nada, pero
+      # se requiere especificar algo.
+      service: "noop@internal"
 
-  services:
-    dev-message:
-      loadBalancer:
-        servers:
-          - url: "http://traefik-dev-message:5678"
+  middlewares:
+    # Middleware de redirección a https
+    redirect-https:
+      redirectScheme:
+        scheme: "https"
+        permanent: true
+        priority: 1000
+
